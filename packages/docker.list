@@ -1,0 +1,5 @@
+docker-ce
+kubeadm
+kubectl
+kubelet
+kubernetes-cni
