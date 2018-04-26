@@ -6,6 +6,7 @@ __author__="@leaeasy"
 __license__="Apache v2.0 License"
 
 export LC_ALL=C.UTF-8
+export PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 
 _installer_banner() {
     echo -e """${red}
