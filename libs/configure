@@ -18,5 +18,6 @@ _configure() {
 EOF
 
     _info "Removing unused packages"
-	_chroot apt-get -y purge live-config* live-boot*
+	_chroot "apt-get -y purge live-config* live-boot*"
+	_chroot "update-initramfs -c -u"
 }
