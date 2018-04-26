@@ -35,10 +35,6 @@ _base() {
     _info "Setting hostname"
     echo "${HOST_name}" > /mnt/etc/hostname
 
-    # Setting Linux
-    _info "Setting Linux initramfs"
-    _chroot "update-initramfs -c -u"
-
     # Setting root passwd
     _info "Setting root password"
     _chroot "echo 'root:${ROOT_passwd}' | chpasswd"

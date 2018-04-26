@@ -2,6 +2,21 @@
 
 _configure() {
 
+	_info "Configure system"
+	_chroot systemd-machined-id-setup
+	cat > /mnt/etc/hosts << EOF
+#
+# /etc/hosts: static lookup table for host names
+#
+
+#<ip-address>	<hostname.domain.org>	<hostname>
+127.0.0.1	localhost.localdomain	localhost
+::1		localhost.localdomain	localhost
+127.0.1.1	${HOST_name}
+
+# End of file
+EOF
+
     _info "Removing unused packages"
-	apt-get -y purge live-config live-boot
+	_chroot apt-get -y purge live-config* live-boot*
 }
