@@ -1,0 +1,53 @@
+#!/bin/bash
+
+_base() {
+
+    # Install Base System
+    _info "Installing base system"
+	until [[ -f ${squashfs} ]];do
+		_prompt "Enter squashfs path:" "(ex: /cdrom/casper/filesystem.squashfs)"
+		read -r squashfs
+	done
+
+	unsquashfs -f -d /mnt ${squashfs}
+
+    # Setting fstab
+    _info "Setting and generating fstab"
+    genfstab -U -p /mnt >> /mnt/etc/fstab
+	cat /mnt/etc/fstab
+
+    # Setting TimeZone
+    _info "Setting time zone"
+    ln -sf /usr/share/zoneinfo/${timezone} /mnt/etc/localtime
+
+    # Setting locale
+    _info "Setting and generating locale"
+    echo "${language}.UTF-8 UTF-8" >> /mnt/etc/locale.gen
+    _chroot "locale-gen
+    export LANG=${language}.UTF-8"
+    echo "LANG=${language}.UTF-8" > /mnt/etc/locale.conf
+
+    # Setting keyboard
+    _info "Setting vconsole"
+    echo "KEYMAP=${keymap_code}" > /mnt/etc/vconsole.conf
+
+    # Setting hostname
+    _info "Setting hostname"
+    echo "${HOST_name}" > /mnt/etc/hostname
+
+    # Setting Linux
+    _info "Setting Linux initramfs"
+    _chroot "update-initramfs -c -u"
+
+    # Setting root passwd
+    _info "Setting root password"
+    _chroot "echo 'root:${ROOT_passwd}' | chpasswd"
+
+    # Setting user
+    _info "Setting user ${USER_name}"
+    _chroot "useradd -g users -m -s /bin/bash ${USER_name}
+    echo '${USER_name}:${USER_passwd}' | chpasswd"
+    if [[ ! -z ${power+x} ]]; then
+		_chroot "gpasswd -a ${USER_name} sudo"
+    fi
+}

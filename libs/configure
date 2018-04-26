@@ -1,0 +1,7 @@
+#!/bin/bash
+
+_configure() {
+
+    _info "Removing unused packages"
+	apt-get -y purge live-config live-boot
+}

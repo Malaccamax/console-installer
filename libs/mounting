@@ -1,0 +1,27 @@
+#!/bin/bash
+
+_mounting() {
+
+    # Mount partitions & swap
+    _info "Mounting partitions"
+	case ${method} in 
+		auto)
+			_check mount /dev/${_disk}${part_order[3]} /mnt
+			;;
+		zfs)
+			_check zfs mount -a
+			;;
+		lvm)
+			_check mount /dev/mapper/root /mnt
+			;;
+	esac
+    _check mkdir /mnt/boot
+    if [[ ${FIRMWARE} == "UEFI" ]]; then
+        _check mkdir -p /mnt/boot/efi/EFI
+        _check mount -t vfat /dev/${_disk}${part_order[1]} /mnt/boot/efi
+    else
+        _check mount /dev/${_disk}${part_order[1]} /mnt/boot
+    fi
+	# FIXME: donot swapon during installation
+    #_check swapon /dev/${_disk}${part_order[2]}
+}

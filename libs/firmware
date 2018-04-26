@@ -1,0 +1,22 @@
+#!/bin/bash
+
+_firmware() {
+
+    # Firmware Detection
+    _info "Firmware detection"
+    if [ -d /sys/firmware/efi/efivars ]; then
+        export FIRMWARE="UEFI"
+        export part_table="GPT"
+        export part_code="g"
+        export part_type=""
+        export boot_filesystem="fat -F32"
+        _note "UEFI firmware detected."
+    else
+        FIRMWARE="BIOS"
+        export part_table="MBR"
+        export part_code="o"
+        export part_type="p\n"
+        export boot_filesystem="ext4"
+        _note "BIOS firmware detected."
+    fi
+}

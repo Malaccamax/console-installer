@@ -1,0 +1,17 @@
+#!/bin/bash
+
+_bootloader() {
+
+    # Install Grub
+    _info "Installing Grub for ${FIRMWARE} firmware"
+    if [[ ${FIRMWARE} == "UEFI" ]]; then
+        _chroot "grub-install --target=x86_64-efi --efi-directory=/boot/efi \
+--bootloader-id=container"
+    else
+        _chroot "grub-install --target=i386-pc /dev/${_disk}"
+    fi
+
+    # Setting Grub
+    _info "Setting Grub for ${FIRMWARE} firmware"
+    _chroot "grub-mkconfig -o /boot/grub/grub.cfg"
+}
