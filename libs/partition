@@ -125,19 +125,22 @@ _partition_auto(){
 _partition_zfs(){
 	_create_boot
 	modprobe zfs
+    _info "Setting System on /dev/${_disk}${part_order[2]}"
+    printf "n\n${part_type}\n\n\nw" | fdisk /dev/${_disk}
     # Create zfs on /dev/xxx2
     yes | _check wipefs -fa /dev/${_disk}${part_order[2]}
 	_info "Creating zfs pool on /dev/${_disk}${part_order[2]}"
 	_check zpool create -f zroot /dev/${_disk}${part_order[2]}
 	_check zfs create -o mountpoint=none zroot/ROOT
-	_check zfs create -o mountpoint=/ zroot/ROOT/default
+	# cannot mount to / now
+	zfs create -o mountpoint=/ zroot/ROOT/default || true
 	_check zpool set bootfs=zroot/ROOT/default zroot
 
 	_info "Export and import zfs pool"
 	_check zpool export zroot
 	_check zpool import -d /dev/disk/by-id -R /mnt zroot
 	zpool set cachefile=/etc/zfs/zpool.cache zroot
-	cp /etc/zfs/zpool.cache /mnt/etc/zfs/zpool.cache
+	install -Dm644 /etc/zfs/zpool.cache /mnt/etc/zfs/zpool.cache
 }
 
 _partition_lvm(){
