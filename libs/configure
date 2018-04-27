@@ -3,7 +3,7 @@
 _configure() {
 
 	_info "Configure system"
-	_chroot systemd-machined-id-setup
+	_chroot systemd-machine-id-setup
 	cat > /mnt/etc/hosts << EOF
 #
 # /etc/hosts: static lookup table for host names

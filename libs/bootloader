@@ -13,5 +13,5 @@ _bootloader() {
 
     # Setting Grub
     _info "Setting Grub for ${FIRMWARE} firmware"
-    _chroot "grub-mkconfig -o /boot/grub/grub.cfg"
+    _chroot "ZPOOL_VDEV_NAME_PATH=1 grub-mkconfig -o /boot/grub/grub.cfg"
 }
